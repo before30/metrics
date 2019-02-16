@@ -1,0 +1,7 @@
+rootProject.name = 'metrics'
+include 'home-metric-core'
+include 'home-metric-springboot2'
+include 'home-metric-spring'
+include 'sample-springboot2'
+include 'sample-springboot2'
+
