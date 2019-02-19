@@ -13,7 +13,6 @@ ext {
 
 docker {
     dependsOn build
-    tags 'latest'
     dockerfile file('src/main/docker/Dockerfile')
     name "${project.group}/${bootJar.baseName}"
     files bootJar.archivePath
