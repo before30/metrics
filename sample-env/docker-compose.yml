@@ -20,10 +20,53 @@ services:
       - monitoring
     volumes:
       - influxdb-volume:/var/lib/influxdb
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    restart: always
+    environment:
+      HOST_PROC: /rootfs/proc
+      HOST_SYS: /rootfs/sys
+      HOST_ETC: /rootfs/etc
+    hostname: my-telegraf
+    networks:
+      - monitoring
+    volumes:
+      - telegraf-volume:/var/lib/telegraf
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+    links:
+      - influxdb
+    depends_on:
+      - influxdb
+  chronograf:
+    image: chronograf
+    container_name: chronograf
+    restart: always
+    ports:
+      - 8888:8888
+    environment:
+      INFLUXDB_URL: http://influxdb:8086
+    networks:
+      - monitoring
+    volumes:
+      - chronograf-volume:/var/lib/chronograf
+    links:
+      - influxdb
+    depends_on:
+      - influxdb
+      - telegraf
 networks:
   monitoring:
 volumes:
   grafana-volume:
     external: true
   influxdb-volume:
+    external: true
+  telegraf-volume:
+    external: true
+  chronograf-volume:
     external: true
