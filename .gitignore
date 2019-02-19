@@ -21,3 +21,11 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+*/out/**
+*/build/**
+.idea/**
+.gradle/4.10/fileContent/fileContent.lock
+.gradle/4.10/javaCompile/classAnalysis.bin
+.gradle/4.10/javaCompile/javaCompile.lock
+.gradle/4.10/javaCompile/taskHistory.bin
