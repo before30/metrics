@@ -1,31 +1,35 @@
-# Compiled class file
-*.class
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
 
-# Log file
-*.log
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# BlueJ files
-*.ctxt
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
-*/out/**
-*/build/**
-.idea/**
-.gradle/4.10/fileContent/fileContent.lock
-.gradle/4.10/javaCompile/classAnalysis.bin
-.gradle/4.10/javaCompile/javaCompile.lock
-.gradle/4.10/javaCompile/taskHistory.bin
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+sample-spring-boot2/out
+gradle/wrapper/gradle-wrapper.jar
+home-metric-core/src/
+home-metric-spring/src/
+home-metric-springboot2/src/
+sample-env/monitoring/
+sample-springboot2/build/
+sample-springboot2/out/production/classes/
+sample-springboot2/src/test/
