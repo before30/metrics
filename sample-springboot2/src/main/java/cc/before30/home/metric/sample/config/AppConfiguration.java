@@ -5,12 +5,15 @@ import com.netflix.concurrency.limits.executors.BlockingAdaptiveExecutor;
 import com.netflix.concurrency.limits.limit.TracingLimitDecorator;
 import com.netflix.concurrency.limits.limit.VegasLimit;
 import com.netflix.concurrency.limits.limiter.SimpleLimiter;
+import net.jodah.failsafe.RetryPolicy;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.ConnectException;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 @Configuration
 public class AppConfiguration {
@@ -23,6 +26,16 @@ public class AppConfiguration {
                 .setConnectTimeout(Duration.ofMillis(3000))
                 .setReadTimeout(Duration.ofMillis(5000))
                 .build();
+    }
+
+    @Bean
+    public RetryPolicy retryPolicy() {
+        RetryPolicy<Object> retryPolicy = new RetryPolicy<>()
+                .handle(ConnectException.class)
+                .withBackoff(100, 500, ChronoUnit.MILLIS)
+                .withMaxRetries(3);
+
+        return retryPolicy;
     }
 
     @Bean
