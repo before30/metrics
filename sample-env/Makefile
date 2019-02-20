@@ -4,6 +4,7 @@ init:
 	docker volume create influxdb-volume
 	docker volume create telegraf-volume
 	docker volume create chronograf-volume
+	docker volume create kapacitor-volume
 	docker run --rm \
 		  -e INFLUXDB_DB=telegraf -e INFLUXDB_ADMIN_ENABLED=true \
 		  -e INFLUXDB_ADMIN_USER=admin \

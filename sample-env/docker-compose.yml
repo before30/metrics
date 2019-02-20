@@ -1,36 +1,14 @@
-version: "2"
+version: "3"
+
 services:
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    restart: always
-    ports:
-      - 3000:3000
-    networks:
-      - monitoring
-    volumes:
-      - grafana-volume:/var/lib/grafana
-  influxdb:
-    image: influxdb
-    container_name: influxdb
-    restart: always
-    ports:
-      - 8086:8086
-    networks:
-      - monitoring
-    volumes:
-      - influxdb-volume:/var/lib/influxdb
+  # Define a Telegraf service
   telegraf:
-    image: telegraf
+    image: telegraf #:1.5.3
     container_name: telegraf
     restart: always
-    environment:
-      HOST_PROC: /rootfs/proc
-      HOST_SYS: /rootfs/sys
-      HOST_ETC: /rootfs/etc
     hostname: my-telegraf
-    networks:
-      - monitoring
+    #    networks:
+    #      - monitoring
     volumes:
       - telegraf-volume:/var/lib/telegraf
       - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
@@ -42,25 +20,77 @@ services:
       - influxdb
     depends_on:
       - influxdb
+    ports:
+      - "8125:8125/udp"
+    environment:
+      HOST_PROC: /rootfs/proc
+      HOST_SYS: /rootfs/sys
+      HOST_ETC: /rootfs/etc
+
+  # Define an InfluxDB service
+  influxdb:
+    image: influxdb #:1.5.1
+    container_name: influxdb
+    restart: always
+    #    networks:
+    #      - monitoring
+    volumes:
+      - influxdb-volume:/var/lib/influxdb
+    ports:
+      - "8086:8086"
+
+  # Define a Chronograf service
   chronograf:
-    image: chronograf
+    image: chronograf #:1.4.3.1
     container_name: chronograf
     restart: always
-    ports:
-      - 8888:8888
+    #    networks:
+    #      - monitoring
     environment:
       INFLUXDB_URL: http://influxdb:8086
-    networks:
-      - monitoring
-    volumes:
-      - chronograf-volume:/var/lib/chronograf
+      KAPACITOR_URL: http://kapacitor:9092
+    ports:
+      - "8888:8888"
     links:
       - influxdb
+      - kapacitor
+    volumes:
+      - chronograf-volume:/var/lib/chronograf
     depends_on:
       - influxdb
-      - telegraf
-networks:
-  monitoring:
+      - kapacitor
+
+  # Define a Kapacitor service
+  kapacitor:
+    image: kapacitor #:1.4.1
+    container_name: kapacitor
+    restart: always
+    #    networks:
+    #      - monitoring
+    environment:
+      KAPACITOR_HOSTNAME: kapacitor
+      KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb:8086
+    links:
+      - influxdb
+    ports:
+      - "9092:9092"
+    volumes:
+      - kapacitor-volume:/var/lib/kapacitor
+
+  # Define a Grafana service
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - 3000:3000
+    #    networks:
+    #      - monitoring
+    volumes:
+      - grafana-volume:/var/lib/grafana
+
+#networks:
+#  monitoring:
 volumes:
   grafana-volume:
     external: true
@@ -70,3 +100,6 @@ volumes:
     external: true
   chronograf-volume:
     external: true
+  kapacitor-volume:
+    external: true
+
