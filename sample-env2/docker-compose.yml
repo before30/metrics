@@ -1,0 +1,68 @@
+version: "3"
+
+services:
+  # Define a Telegraf service
+  telegraf:
+    image: telegraf #:1.5.3
+    container_name: telegraf-2
+    restart: always
+    hostname: my-telegraf
+    networks:
+      - monitoring-2
+    volumes:
+      - telegraf-2-volume:/var/lib/telegraf
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+#    links:
+#      - influxdb
+#    depends_on:
+#      - influxdb
+    ports:
+      - "8125:8125/udp"
+    environment:
+      HOST_PROC: /rootfs/proc
+      HOST_SYS: /rootfs/sys
+      HOST_ETC: /rootfs/etc
+
+  # Define a Grafana service
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-2
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - monitoring-2
+    volumes:
+      - grafana-2-volume:/var/lib/grafana
+  graphite:
+    image: graphiteapp/graphite-statsd
+    container_name: graphite-2
+    restart: always
+    ports:
+      - "9080:80"
+      - "2003:2003"
+      - "2004:2004"
+      - "2023:2023"
+      - "2024:2024"
+#      - "8125:8125/udp"
+      - "8880:8080"
+#      - "8126:8126"
+    networks:
+      - monitoring-2
+    volumes:
+      - graphite-2-volume:/var/lib/graphite
+networks:
+  monitoring-2:
+volumes:
+  grafana-2-volume:
+    external: true
+  telegraf-2-volume:
+    external: true
+  graphite-2-volume:
+    external: true
+
+
