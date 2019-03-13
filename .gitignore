@@ -26,10 +26,5 @@
 /.nb-gradle/
 sample-spring-boot2/out
 gradle/wrapper/gradle-wrapper.jar
-home-metric-core/src/
-home-metric-spring/src/
-home-metric-springboot2/src/
-sample-env/monitoring/
 sample-springboot2/build/
 sample-springboot2/out/production/classes/
-sample-springboot2/src/test/

@@ -19,7 +19,6 @@ allprojects {
     repositories {
         mavenCentral()
         jcenter()
-        maven { url "http://nexus.coupang.net/content/groups/public" }
         maven { url 'https://repo.spring.io/milestone' }
     }
 }
